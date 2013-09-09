@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Lab Assistant</string>
+    <string name="titleElementDetails">Element Details - %s</string>
+    <string name="titlePeriodicTable">Periodic Table of the Elements</string>
+    <string name="titleElementList">List of Elements</string>
+    <string name="titlePreferences">Elementary Options</string>
+    <string name="titleError">Error</string>
+    <string name="titleSort">Sort by:</string>
+    <string name="prefSummarySort">Sort the Elements by</string>
+    <string name="errorNoConnection">No internet connection available</string>
+    <string name="errorInstallation">An error occurred during installation</string>
+    <string name="buttonClose">Close</string>
+    <string name="buttonRetry">Retry</string>
+    <string name="buttonVideo">Watch Video</string>
+    <string name="buttonWiki">Wikipedia</string>
+    <string name="buttonSort">Sort</string>
+    <string name="menuOptions">Options</string>
+    <string name="menuList">List View</string>
+    <string name="menuTable">Table View</string>
+    <string name="prefTitleTemp">Temperature Units</string>
+    <string name="prefSummaryTemp">Units to use to display temperature values</string>
+    <string name="prefTitleColors">Element Colors</string>
+    <string name="prefSummaryColors">Property to use to determine element block colors</string>
+    <string name="updateGetVersion">Checking for updates</string>
+    <string name="updateFetchData">Downloading updates</string>
+    <string name="updatePopulateDatabase">Installing updates</string>
+    <string name="updateFinished">Application up to date</string>
+    <string name="labelNumber">Atomic Number:</string>
+    <string name="labelSymbol">Symbol:</string>
+    <string name="labelName">Name:</string>
+    <string name="labelWeight">Atomic Weight:</string>
+    <string name="labelCategory">Category:</string>
+    <string name="labelGPB">Group, Period, Block:</string>
+    <string name="labelConfiguration">Electron Configuration:</string>
+    <string name="labelElectrons">Electrons Per Shell:</string>
+    <string name="labelDensity">Density:</string>
+    <string name="labelMelt">Melting Point:</string>
+    <string name="labelBoil">Boiling Point:</string>
+    <string name="labelHeat">Heat:</string>
+    <string name="labelNegativity">Electronegativity:</string>
+    <string name="labelAbundance">Abundance:</string>
+    <string name="hintFilter">Filter by Name or Symbol</string>
+    <string name="unknown">unknown</string>
+
+    <string-array name="options_array">
+        <item></item>
+        <item>Periodic Table</item>
+        <item>Elements</item>
+        <item>Help</item>
+        <item>Exit</item>
+    </string-array>
+
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+    <string name="action_settings">Settings</string>
+    <string name="search_title">Element</string>
+    <string name="title_activity_main">Lab Assistant</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="alphabet">ABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
+    <string name="title_activity_chemical_equation">Chemical Equation</string>
+    <string name="title_activity_help">HelpActivity</string>
+    <string name="introduction"> People have known about elements like carbon and gold since ancient time. The elements couldnt be changed using any chemical method. If you examine samples of iron and silver, you can not tell how many protons the atoms have. However, you can tell the elements apart because they have different properties. You might notice there are more similarities between iron and silver than between iron and oxygen. This is where the periodic table becomes useful. It organizes elements according to trends so that you can see the relationships between them.</string>
+	<string name="why">Many elements remained to be discovered in Mendeleevs time. The periodic table helped predict the properties of new elements. The modern periodic table is used to predict properties and reactions of the elements.</string>
+	<string name="periods">Rows of elements are called periods. The period number of an element signifies the highest unexcited energy level for an electron in that element. The number of elements in a period increases as you move down the periodic table because there are more sublevels per level as the energy level of the atom increases.</string>
+	<string name="blocks">Columns of elements help define element groups. Elements within a group share several common properties. Groups are elements have the same outer electron arrangement. The outer electrons are called valence electrons. Because they have the same number of valence electrons, elements in a group share similar chemical properties. The Roman numerals listed above each group are the usual number of valence electrons. For example, a group VA element will have 5 valence electrons.</string>
+
+</resources>
