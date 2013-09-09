@@ -38,8 +38,6 @@ import android.widget.SearchView;
 import android.widget.SearchView.OnCloseListener;
 import android.widget.SearchView.OnQueryTextListener;
 
-import com.ultramegatech.ey.MainActivity.ElementList;
-import com.ultramegatech.ey.MainActivity.PeriodicTable;
 import com.ultramegatech.ey.provider.Elements;
 import com.ultramegatech.ey.util.ElementUtils;
 
@@ -71,8 +69,6 @@ public class ElementListActivity extends FragmentActivity implements
 
 	/* Sort directions */
 	private static String SORT_ASC = "ASC";
-	private static String SORT_DESC = "DESC";
-
 	/* The list */
 	private ListView mListView;
 
@@ -402,6 +398,17 @@ public class ElementListActivity extends FragmentActivity implements
 			setTitle(mOptions[position]);
 			mDrawerLayout.closeDrawer(mDrawerList);
 		}
+		if (position == 3) {
+			Fragment fragment = new HelperActivity();
+			FragmentManager fragmentManager = getFragmentManager();
+			fragmentManager.beginTransaction()
+					.replace(R.id.content_frame, fragment).commit();
+
+			// update selected item and title, then close the drawer
+			mDrawerList.setItemChecked(position, true);
+			setTitle(mOptions[position]);
+			mDrawerLayout.closeDrawer(mDrawerList);
+		}
 		if (position == 4) {
 			this.finish();
 			Intent intent = new Intent(Intent.ACTION_MAIN);
@@ -475,4 +482,21 @@ public class ElementListActivity extends FragmentActivity implements
 			return rootView;
 		}
 	}
+	public static class HelperActivity extends Fragment {
+		public HelperActivity() {
+		}
+
+		@Override
+		public View onCreateView(LayoutInflater inflater, ViewGroup container,
+				Bundle savedInstanceState) {
+			View rootView = inflater.inflate(R.layout.activity_help, container,
+					false);
+
+			Intent intent = new Intent(getActivity(), HelpActivity.class);
+			getActivity().setTitle(R.string.menuList);
+			getActivity().startActivity(intent);
+			return rootView;
+		}
+	}
+
 }
