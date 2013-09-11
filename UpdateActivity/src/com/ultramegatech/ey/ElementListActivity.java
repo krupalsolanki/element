@@ -54,7 +54,7 @@ public class ElementListActivity extends FragmentActivity implements
 	private CharSequence mTitle;
 	private String[] mOptions;
 	private String mSort;
-
+	String sortOrder;
 	/* Keys for saving instance state */
 
 	private static final String KEY_SORT = "key_sort";
@@ -198,8 +198,6 @@ public class ElementListActivity extends FragmentActivity implements
 		// Assumes current activity is the searchable activity
 		mSearchView.setSearchableInfo(searchManager
 				.getSearchableInfo(getComponentName()));
-		mSearchView.setIconifiedByDefault(true); // Do not iconify the widget;
-													// expand it by default
 		mSearchView.setOnQueryTextListener(this);
 		mSearchView.setOnCloseListener(this);
 
@@ -260,7 +258,7 @@ public class ElementListActivity extends FragmentActivity implements
 			mListProjection[4] = Elements.CATEGORY;
 			mListFields[3] = Elements.CATEGORY;
 		}
-		final String sortOrder = prefs.getString("sortBy", "Atomic Number");
+		sortOrder = prefs.getString("sortBy", "Atomic Number");
 		Log.i("sortBy", sortOrder);
 		if (sortOrder.equalsIgnoreCase("atomic number")) {
 			mSort = Elements.NUMBER + " " + SORT_ASC;
@@ -316,8 +314,14 @@ public class ElementListActivity extends FragmentActivity implements
 	}
 
 	private void setupAdapter() {
-		mAdapter = new CustomAdapter(this, R.layout.element_list_item, null,
-				mListFields, mListViews, 0);
+		if (sortOrder.equalsIgnoreCase("atomic number")) {
+			mAdapter = new SimpleCursorAdapter(this, R.layout.element_list_item, null,
+					mListFields, mListViews, 0);
+		} else {
+			mAdapter = new CustomAdapter(this, R.layout.element_list_item, null,
+					mListFields, mListViews, 0);
+		}
+
 
 		final ElementUtils elementUtils = new ElementUtils(this);
 		mAdapter.setViewBinder(new SimpleCursorAdapter.ViewBinder() {
@@ -380,7 +384,10 @@ public class ElementListActivity extends FragmentActivity implements
 	@Override
 	public boolean onClose() {
 		if (!TextUtils.isEmpty(mSearchView.getQuery())) {
-			mSearchView.setQuery(null, true);
+			mSearchView.setQuery(null, false);
+			mSearchView.clearFocus();
+			mSearchView.setFocusable(false);
+			mSearchView.setIconified(true);
 		}
 
 		return true;
