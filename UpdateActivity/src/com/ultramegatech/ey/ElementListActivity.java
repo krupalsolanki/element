@@ -31,16 +31,17 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AlphabetIndexer;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.SearchView.OnCloseListener;
 import android.widget.SearchView.OnQueryTextListener;
+import android.widget.SectionIndexer;
 
 import com.ultramegatech.ey.provider.Elements;
 import com.ultramegatech.ey.util.ElementUtils;
-
 
 public class ElementListActivity extends FragmentActivity implements
 		LoaderCallbacks<Cursor>, OnSharedPreferenceChangeListener,
@@ -52,6 +53,7 @@ public class ElementListActivity extends FragmentActivity implements
 	private CharSequence mDrawerTitle;
 	private CharSequence mTitle;
 	private String[] mOptions;
+	private String mSort;
 
 	/* Keys for saving instance state */
 
@@ -78,9 +80,6 @@ public class ElementListActivity extends FragmentActivity implements
 	/* Current value to filter results by */
 	private String mFilter;
 
-	/* Current value for sorting elements */
-	private String mSort = Elements.NUMBER + " " + SORT_ASC;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -90,10 +89,11 @@ public class ElementListActivity extends FragmentActivity implements
 		 * ActionBarWrapper.getInstance(this).setDisplayHomeAsUpEnabled(true);
 		 */
 		setContentView(R.layout.element_list);
+
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
 			mFilter = getIntent().getStringExtra("query");
-		     Log.i("query", mFilter);
+			Log.i("query", mFilter);
 		}
 		mTitle = mDrawerTitle = getTitle();
 		mOptions = getResources().getStringArray(R.array.options_array);
@@ -106,7 +106,7 @@ public class ElementListActivity extends FragmentActivity implements
 		// set up the drawer's list view with items and click listener
 		mDrawerList.setAdapter(new ArrayAdapter<String>(this,
 				R.layout.drawer_list_item, mOptions));
-		
+
 		Log.e("drawer set ", "drawer");
 		mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
@@ -225,10 +225,10 @@ public class ElementListActivity extends FragmentActivity implements
 		// Handle action buttons
 		switch (item.getItemId()) {
 		case R.id.action_settings:
-			
-			 Intent intent = new Intent(this, SettingsActivity.class);
-			 startActivity(intent);
-			 
+
+			Intent intent = new Intent(this, SettingsActivity.class);
+			startActivity(intent);
+
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -260,14 +260,64 @@ public class ElementListActivity extends FragmentActivity implements
 			mListProjection[4] = Elements.CATEGORY;
 			mListFields[3] = Elements.CATEGORY;
 		}
+		final String sortOrder = prefs.getString("sortBy", "Atomic Number");
+		Log.i("sortBy", sortOrder);
+		if (sortOrder.equalsIgnoreCase("atomic number")) {
+			mSort = Elements.NUMBER + " " + SORT_ASC;
+		} else {
+			mSort = Elements.NAME + " " + SORT_ASC;
+		}
+
 	}
 
 	/**
 	 * Create and configure the list adapter.
 	 */
+	public class CustomAdapter extends SimpleCursorAdapter implements
+			SectionIndexer {
+		public CustomAdapter(Context context, int layout, Cursor c,
+				String[] from, int[] to, int flags) {
+			super(context, layout, c, from, to, flags);
+			final String alphabet = getApplicationContext().getString(
+					R.string.alphabet);
+			mAlphabetIndexer = new AlphabetIndexer(null, 3, alphabet);
+		}
+
+		private AlphabetIndexer mAlphabetIndexer;
+
+		@Override
+		public Cursor swapCursor(Cursor newCursor) {
+			// Update the AlphabetIndexer with new cursor as well
+			mAlphabetIndexer.setCursor(newCursor);
+			return super.swapCursor(newCursor);
+		}
+
+		@Override
+		public int getPositionForSection(int section) {
+			if (getCursor() == null) {
+				return 0;
+			}
+			return mAlphabetIndexer.getPositionForSection(section);
+		}
+
+		@Override
+		public int getSectionForPosition(int position) {
+			if (getCursor() == null) {
+				return 0;
+			}
+			return mAlphabetIndexer.getSectionForPosition(position);
+		}
+
+		@Override
+		public Object[] getSections() {
+			return mAlphabetIndexer.getSections();
+		}
+
+	}
+
 	private void setupAdapter() {
-		mAdapter = new SimpleCursorAdapter(this, R.layout.element_list_item,
-				null, mListFields, mListViews, 0);
+		mAdapter = new CustomAdapter(this, R.layout.element_list_item, null,
+				mListFields, mListViews, 0);
 
 		final ElementUtils elementUtils = new ElementUtils(this);
 		mAdapter.setViewBinder(new SimpleCursorAdapter.ViewBinder() {
@@ -286,16 +336,6 @@ public class ElementListActivity extends FragmentActivity implements
 		mListView.setAdapter(mAdapter);
 	}
 
-
-	
-	public void setSort(String field, String direction) {
-		final String oldSort = mSort;
-		mSort = field + " " + direction;
-		if (!oldSort.equals(mSort)) {
-			restartLoader();
-		}
-	}
-
 	/**
 	 * Restart the Cursor Loader.
 	 */
@@ -305,7 +345,6 @@ public class ElementListActivity extends FragmentActivity implements
 
 	public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
 		setProgressBarIndeterminateVisibility(true);
-		
 
 		final Uri uri;
 		if (TextUtils.isEmpty(mFilter)) {
@@ -329,14 +368,14 @@ public class ElementListActivity extends FragmentActivity implements
 
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
 			String key) {
-		if (key.equals("elementColors")) {
+		if (key.equals("elementColors") || (key.equals("sortBy"))) {
 			getSupportLoaderManager().destroyLoader(0);
 			loadPreferences();
 			setupAdapter();
 			restartLoader();
 		}
-	}
 
+	}
 
 	@Override
 	public boolean onClose() {
@@ -371,8 +410,7 @@ public class ElementListActivity extends FragmentActivity implements
 		// TODO Auto-generated method stub
 		return false;
 	}
-	
-	
+
 	private void selectItem(int position) {
 		// update the main content by replacing fragments
 		// update the main content by replacing fragments
@@ -482,6 +520,7 @@ public class ElementListActivity extends FragmentActivity implements
 			return rootView;
 		}
 	}
+
 	public static class HelperActivity extends Fragment {
 		public HelperActivity() {
 		}
@@ -498,5 +537,4 @@ public class ElementListActivity extends FragmentActivity implements
 			return rootView;
 		}
 	}
-
 }

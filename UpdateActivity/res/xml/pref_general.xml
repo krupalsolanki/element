@@ -17,10 +17,10 @@
         android:summary="@string/prefSummaryColors"
         android:title="@string/prefTitleColors" />
     <ListPreference
-        android:defaultValue="Atomic Number"
+        android:defaultValue="Number"
         android:dialogTitle="@string/titleSort"
-        android:entries="@array/sortField"
-        android:entryValues="@array/sortFieldNames"
+        android:entries="@array/sortFieldNames"
+        android:entryValues="@array/sortField"
         android:key="sortBy"
         android:summary="@string/prefSummarySort"
         android:title="@string/titleSort" />

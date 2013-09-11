@@ -55,4 +55,10 @@
 
     <style name="listViewActivatedStyle" />
 
+    <style name="ElementListView">
+        <item name="android:verticalScrollbarPosition">right</item>
+        <item name="android:fastScrollAlwaysVisible">true</item>
+        <item name="android:scrollbarStyle">outsideInset</item>
+    </style>
+
 </resources>
