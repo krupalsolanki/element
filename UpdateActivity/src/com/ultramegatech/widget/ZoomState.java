@@ -3,11 +3,6 @@ package com.ultramegatech.widget;
 
 import java.util.Observable;
 
-/**
- * Maintains the state of a view's zoom level and pan position.
- * 
- * @author Steve Guidetti
- */
 public class ZoomState extends Observable {
     /* Zoom level, 1.0 being the level at which the content fits the view */
     private double mZoom;
